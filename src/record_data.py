@@ -38,7 +38,7 @@ def get_spectrum(arg1, arg2):
         the_spectrum = list(spl.get_spectrum())
         print(the_spectrum)
         time.sleep(2)
-    print("stop recording")
+    print("stop recording", arg2)
 
 # states
 # INIT: program initiated
@@ -100,6 +100,8 @@ def button_pressed(button_l, button_r, led_l, led_r):
             last_thread.pop()
         # all other cases stop
         else:
+            print("stop recording event B")
+            last_state.append("BRR")
             last_thread[-1].do_run = False
             last_thread.pop()
     # relase right button
