@@ -13,6 +13,7 @@ import time
 import sqlite3
 import os
 import confs
+import light_up 
 
 
 # -- set up the connections
@@ -42,6 +43,10 @@ last_state.append("INIT")
 
 
 def get_spectrum(arg1, arg2):
+    if arg2 == "left":
+        light_up.light_up(1, "reds")
+    else:
+        light_up.light_up(1, "greens")
     """ reads the spectrum every 0.5 seconds until break from callback """
     tuple_rows = []
     t = threading.currentThread()
