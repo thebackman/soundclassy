@@ -1,13 +1,15 @@
 """ this runs on zero and listens """
 
+
 # code from
 # https://tutorials-raspberrypi.de/datenaustausch-raspberry-pi-mqtt-broker-client/
 
 	
+import os
 import paho.mqtt.client as mqtt
  
 MQTT_SERVER = "localhost"
-MQTT_PATH = "test_channel"
+MQTT_PATH = "recording_channel"
  
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -21,6 +23,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     # more callbacks, etc
+    os.system('sudo python3 heartbeat.py sudo python3 heartbeat.py 2 reds')
  
 client = mqtt.Client()
 client.on_connect = on_connect
