@@ -2,3 +2,7 @@
 soundenv
 src/__pycache__/
 TODOS.md
+spectrum.db
+*.sql
+
+

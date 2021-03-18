@@ -1,14 +1,23 @@
 """ record data based on pressing of buttons """
 
+
 # -- libs
 
+
+from datetime import datetime
 from tinkerforge.ip_connection import IPConnection
 from tinkerforge.bricklet_dual_button_v2 import BrickletDualButtonV2
 from tinkerforge.bricklet_sound_pressure_level import BrickletSoundPressureLevel
 import threading
 import time
+import sqlite3
+import os
+import confs
+import light_up 
+
 
 # -- set up the connections
+
 
 # the button controller
 BUTTON_HOST = "192.168.2.114"
@@ -21,34 +30,54 @@ UID_SPECTRUM = "NZ2"
 # always the same port
 PORT = 4223
 
+
 # -- globals
+
 
 last_state = []
 last_thread = []
 last_state.append("INIT")
 
+
 # -- functions
 
-# records data and waits for an event
-# e is an event that the function is fed
+
 def get_spectrum(arg1, arg2):
+    if arg2 == "left":
+        light_up.light_up(1, "reds")
+    else:
+        light_up.light_up(1, "greens")
+    """ reads the spectrum every 0.5 seconds until break from callback """
+    tuple_rows = []
     t = threading.currentThread()
     while getattr(t, "do_run", True):
         print ("recording", arg2)
-        the_spectrum = list(spl.get_spectrum())
-        print(the_spectrum)
-        time.sleep(2)
-    print("stop recording", arg2)
+        now = (datetime.now(),)
+        spectrum = spl.get_spectrum()
+        event = (arg2,)
+        big_tuple = now + event + spectrum
+        tuple_rows.append(big_tuple)
+        time.sleep(0.5)
+    print("stop recording, storing", arg2)
+    store_in_db(tuple_rows)
 
-# states
-# INIT: program initiated
-# SRL: start recording left
-# BRL: break recording left
-# SRR: start recording right
-# BRR: break recording right
 
-# callback function trigged by press of button
+def store_in_db(the_tuples):
+    """ send a list of tuples to the db connection """
+
+    # get the query
+    insert_query = confs.insert_query
+
+    # insert the data
+    sound_conn = sqlite3.connect(os.path.join(confs.proj_path, "spectrum.db"))
+    cur = sound_conn.cursor()
+    cur.executemany(insert_query, the_tuples)
+    sound_conn.commit()
+    sound_conn.close()
+
+
 def button_pressed(button_l, button_r, led_l, led_r):
+    """ main callback function, starts and stops recording of data """
 
     print("CALLBACK CALLED --------------------------------------------")
 
@@ -113,11 +142,15 @@ def button_pressed(button_l, button_r, led_l, led_r):
     n_threads = threading.active_count()
     print("we have ", n_threads, "threads active")
 
+
 # -- main execution of flow
+
 
 if __name__ == "__main__":
 
+
     # -- button connection and callback
+
 
     # set up the connection to the button
     ipcon_button = IPConnection()
@@ -133,7 +166,9 @@ if __name__ == "__main__":
     # Enable state changed callback
     db.set_state_changed_callback_configuration(True)
 
+
     # -- spectrum connection
+
 
     # initiate and setup the device
     ipcon_spectrum = IPConnection() # Create IP connection
