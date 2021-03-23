@@ -1,4 +1,4 @@
-""" check how much data is recorded """
+""" check how much data has been recorded so far """
 
 
 import sqlite3
@@ -12,10 +12,21 @@ def show_me_the_data():
 
     with interesting as (
         select measureID, event, tstamp
-        from decibel )
-    select count(*) as obs_count, event, min(tstamp), max(tstamp)
-    from interesting
-    group by event
+        from decibel ),
+    intermediate as (
+        select count(*) as obs_count, event
+        from interesting
+        group by event ),
+    total as (
+        select sum(obs_count) as total_n
+        from intermediate
+    )
+    select
+        a.event,
+        a.obs_count,
+        b.total_n,
+        (cast(a.obs_count as real) / cast(b.total_n as real)) * 100 as the_balance
+    from intermediate a, total b ;
     """
 
     sound_conn = sqlite3.connect(confs.db_path)
@@ -25,3 +36,6 @@ def show_me_the_data():
 
 if __name__ == "__main__":
     show_me_the_data()
+
+
+
