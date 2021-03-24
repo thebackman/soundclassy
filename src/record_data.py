@@ -51,7 +51,7 @@ def get_spectrum(arg1, arg2):
     tuple_rows = []
     t = threading.currentThread()
     while getattr(t, "do_run", True):
-        print ("recording", arg2)
+        print (">>> recording", arg2)
         now = (datetime.now(),)
         spectrum = spl.get_spectrum()
         event = (arg2,)
