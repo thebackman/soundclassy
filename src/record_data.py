@@ -44,9 +44,9 @@ last_state.append("INIT")
 
 def get_spectrum(arg1, arg2):
     if arg2 == "left":
-        light_up.light_up(1, "reds")
+        light_up.light_up("red")
     else:
-        light_up.light_up(1, "greens")
+        light_up.light_up("green")
     """ reads the spectrum every 0.5 seconds until break from callback """
     tuple_rows = []
     t = threading.currentThread()

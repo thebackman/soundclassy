@@ -5,5 +5,5 @@ TODOS.md
 spectrum.db
 *.sql
 /cfg
-
+*.csv
 
