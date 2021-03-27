@@ -4,7 +4,7 @@ import sys
 from blinkt import set_pixel, set_brightness, show, clear
 import time
 
-def red_or_green(color)
+def red_or_green(color):
 
     set_brightness(0.1)
 
