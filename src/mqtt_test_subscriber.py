@@ -7,6 +7,8 @@
 	
 import os
 import paho.mqtt.client as mqtt
+import red_green
+
  
 MQTT_SERVER = "localhost"
 MQTT_PATH = "recording_channel"
@@ -23,7 +25,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     # more callbacks, etc
-    os.system('python3 /home/pi/Projects/TheBlinkt/red_green.py red')
+    red_green.red_or_green("red")
  
 client = mqtt.Client()
 client.on_connect = on_connect
