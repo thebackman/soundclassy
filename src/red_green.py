@@ -24,3 +24,6 @@ def red_or_green(color)
     show()
     time.sleep(1)
     clear()
+
+if __name__ == "__main__":
+    red_or_green("green")
