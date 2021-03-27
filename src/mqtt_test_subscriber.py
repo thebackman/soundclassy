@@ -23,7 +23,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     # more callbacks, etc
-    os.system('sudo python3 /home/pi/Projects/TheHat/heartbeat.py 2 reds')
+    os.system('python3 /home/pi/Projects/TheBlinkt/red_green.py 2 red')
  
 client = mqtt.Client()
 client.on_connect = on_connect
